@@ -1,0 +1,36 @@
+{
+  "name": "@jamesdabbs/nest-platform",
+  "version": "0.0.1-alpha1",
+  "license": "UNLICENSED",
+  "main": "dist/index.js",
+  "bin": {
+    "nest-platform": "bin/cli.sh"
+  },
+  "types": "dist/index.d.ts",
+  "repository": "https://github.com/jamesdabbs/friday",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.0",
+    "esbuild": "^0.12.5",
+    "typescript": "^4.3.2"
+  },
+  "scripts": {
+    "build": "concurrently \"npm run build:bundle\" \"npm run build:hmr\" \"npm run build:types\"",
+    "build:bundle": "npx esbuild src/index.ts --bundle --outfile=dist/index.js --format=cjs",
+    "build:hmr": "cp src/hmr.config.js dist/hmr.config.js",
+    "build:types": "tsc --emitDeclarationOnly"
+  },
+  "dependencies": {
+    "@nestjs/config": "^0.6.3",
+    "@nestjs/core": "^7.6.18",
+    "@prisma/client": "^2.25.0",
+    "cache-manager": "^3.4.4",
+    "class-transformer": "^0.4.0",
+    "class-validator": "^0.13.1",
+    "reflect-metadata": "^0.1.13",
+    "run-script-webpack-plugin": "^0.0.11",
+    "webpack-node-externals": "^3.0.0"
+  }
+}

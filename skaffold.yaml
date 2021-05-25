@@ -1,0 +1,54 @@
+apiVersion: skaffold/v2beta16
+kind: Config
+
+build:
+  local:
+    push: false
+    useBuildkit: true
+  artifacts:
+
+  - image: nest-platform
+    context: packages/nest-platform
+    docker:
+      dockerfile: build/Dockerfile.npm-package
+
+  - image: meetings
+    context: packages/meetings
+    requires:
+      - image: nest-platform
+        alias: NEST_PLATFORM
+    docker: &docker
+      secret:
+        id: npmrc
+        src: .npmrc
+    sync: &sync
+      manual:
+        - src: src/**/*.ts
+          dest: .
+        - src: '../shared/dist/*'
+          dest: node_modules/@jamesdabbs/nest-platform/dist
+
+  - image: minutes
+    context: packages/minutes
+    docker: *docker
+    sync: *sync
+  - image: schedule
+    context: packages/schedule
+    docker: *docker
+    sync: *sync
+  - image: slack
+    context: packages/slack
+    docker: *docker
+    sync: *sync
+
+deploy:
+  kubectl:
+    flags:
+      global:
+        - --namespace=friday
+    manifests:
+    # Probably want to manually install these into the kafka namespace
+    # and not have them managed by Skaffold
+    # - packages/infra/vendor/strimzi-operator.yaml
+    # - packages/infra/vendor/kafka-persistent-single.yaml
+    - packages/infra/dist/infra.k8s.yaml

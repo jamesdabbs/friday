@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Person {
+  id        Int    @id @default(autoincrement())
+  slackName String @unique
+
+  emceed Instance[] @relation("Emcees")
+
+  scribed Instance[] @relation("Scribes")
+}
+
+model Meeting {
+  id           Int        @id @default(autoincrement())
+  name         String     @unique
+  slackChannel String
+  instances    Instance[]
+}
+
+model Instance {
+  id Int @id @default(autoincrement())
+
+  meetingId Int
+  meeting   Meeting @relation(fields: [meetingId], references: [id])
+
+  at DateTime
+
+  emceeId Int
+  emcee   Person? @relation("Emcees", fields: [emceeId], references: [id])
+
+  scribeId Int
+  scribe   Person? @relation("Scribes", fields: [scribeId], references: [id])
+
+  agendaUrl String?
+}
