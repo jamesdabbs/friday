@@ -1,0 +1,117 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ScheduleChart with defaults matches the snapshot 1`] = `
+Array [
+  Object {
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": Object {
+      "name": "schedule",
+    },
+    "spec": Object {
+      "replicas": 1,
+      "selector": Object {
+        "matchLabels": Object {
+          "cdk8s.deployment": "construct-schedule.deployment-c84b1450",
+        },
+      },
+      "template": Object {
+        "metadata": Object {
+          "labels": Object {
+            "cdk8s.deployment": "construct-schedule.deployment-c84b1450",
+          },
+        },
+        "spec": Object {
+          "containers": Array [
+            Object {
+              "env": Array [
+                Object {
+                  "name": "GOOGLE_CLIENT_ID",
+                  "valueFrom": Object {
+                    "secretKeyRef": Object {
+                      "key": "GOOGLE_CLIENT_ID",
+                      "name": "schedule-secret",
+                    },
+                  },
+                },
+                Object {
+                  "name": "GOOGLE_CLIENT_SECRET",
+                  "valueFrom": Object {
+                    "secretKeyRef": Object {
+                      "key": "GOOGLE_CLIENT_SECRET",
+                      "name": "schedule-secret",
+                    },
+                  },
+                },
+                Object {
+                  "name": "GOOGLE_PERSONAL_REFRESH_TOKEN",
+                  "valueFrom": Object {
+                    "secretKeyRef": Object {
+                      "key": "GOOGLE_PERSONAL_REFRESH_TOKEN",
+                      "name": "schedule-secret",
+                    },
+                  },
+                },
+                Object {
+                  "name": "GOOGLE_CLIENT_REDIRECT_URI",
+                  "value": "http://localhost:3001/auth/google/callback",
+                },
+              ],
+              "image": "schedule",
+              "imagePullPolicy": "IfNotPresent",
+              "name": "schedule",
+              "ports": Array [],
+              "volumeMounts": Array [],
+            },
+          ],
+          "volumes": Array [],
+        },
+      },
+    },
+  },
+  Object {
+    "apiVersion": "v1",
+    "kind": "Service",
+    "metadata": Object {
+      "name": "schedule",
+    },
+    "spec": Object {
+      "externalIPs": Array [],
+      "ports": Array [
+        Object {
+          "port": 80,
+          "targetPort": 3000,
+        },
+      ],
+      "selector": Object {
+        "cdk8s.deployment": "construct-schedule.deployment-c84b1450",
+      },
+      "type": "ClusterIP",
+    },
+  },
+  Object {
+    "apiVersion": "networking.k8s.io/v1beta1",
+    "kind": "Ingress",
+    "metadata": Object {
+      "name": "construct-schedule.ingress.local-c82578ec",
+    },
+    "spec": Object {
+      "rules": Array [
+        Object {
+          "host": "schedule.localhost",
+          "http": Object {
+            "paths": Array [
+              Object {
+                "backend": Object {
+                  "serviceName": "schedule",
+                  "servicePort": 80,
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+  },
+]
+`;

@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SlackChart with defaults matches the snapshot 1`] = `
+Array [
+  Object {
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": Object {
+      "name": "slack",
+    },
+    "spec": Object {
+      "replicas": 1,
+      "selector": Object {
+        "matchLabels": Object {
+          "cdk8s.deployment": "construct-slack.deployment-c8b9c8f1",
+        },
+      },
+      "template": Object {
+        "metadata": Object {
+          "labels": Object {
+            "cdk8s.deployment": "construct-slack.deployment-c8b9c8f1",
+          },
+        },
+        "spec": Object {
+          "containers": Array [
+            Object {
+              "env": Array [
+                Object {
+                  "name": "SLACK_SIGNING_SECRET",
+                  "valueFrom": Object {
+                    "secretKeyRef": Object {
+                      "key": "SLACK_SIGNING_SECRET",
+                      "name": "slack-secret",
+                    },
+                  },
+                },
+                Object {
+                  "name": "SLACK_BOT_USER_TOKEN",
+                  "valueFrom": Object {
+                    "secretKeyRef": Object {
+                      "key": "SLACK_BOT_USER_TOKEN",
+                      "name": "slack-secret",
+                    },
+                  },
+                },
+              ],
+              "image": "slack",
+              "imagePullPolicy": "IfNotPresent",
+              "name": "slack",
+              "ports": Array [],
+              "volumeMounts": Array [],
+            },
+          ],
+          "volumes": Array [],
+        },
+      },
+    },
+  },
+]
+`;

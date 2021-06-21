@@ -6,7 +6,7 @@ import { MeetingsChart } from "./src/meetings.chart";
 import { ScheduleChart } from "./src/schedule.chart";
 import { MinutesChart } from "./src/minutes.chart";
 
-export class MyChart extends Chart {
+export class FridayChart extends Chart {
   constructor(scope: Construct, id: string, props: ChartProps = {}) {
     super(scope, id, props);
 
@@ -25,5 +25,5 @@ export class MyChart extends Chart {
 }
 
 const app = new App();
-new MyChart(app, "infra");
+new FridayChart(app, "infra");
 app.synth();

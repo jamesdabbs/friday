@@ -1,3 +1,485 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Placeholder Empty 1`] = `Array []`;
+exports[`Placeholder with defaults 1`] = `
+Array [
+  Object {
+    "apiVersion": "v1",
+    "kind": "Service",
+    "metadata": Object {
+      "name": "meetings-db",
+    },
+    "spec": Object {
+      "externalIPs": Array [],
+      "ports": Array [
+        Object {
+          "port": 5432,
+        },
+      ],
+      "selector": Object {
+        "cdk8s.statefulset": "test-chart-meetings.chart-meetings.db.sts-c8c94a82",
+      },
+      "type": "ClusterIP",
+    },
+  },
+  Object {
+    "apiVersion": "apps/v1",
+    "kind": "StatefulSet",
+    "metadata": Object {
+      "name": "meetings-db",
+    },
+    "spec": Object {
+      "podManagementPolicy": "OrderedReady",
+      "replicas": 1,
+      "selector": Object {
+        "matchLabels": Object {
+          "cdk8s.statefulset": "test-chart-meetings.chart-meetings.db.sts-c8c94a82",
+        },
+      },
+      "serviceName": "meetings-db",
+      "template": Object {
+        "metadata": Object {
+          "labels": Object {
+            "cdk8s.statefulset": "test-chart-meetings.chart-meetings.db.sts-c8c94a82",
+          },
+        },
+        "spec": Object {
+          "containers": Array [
+            Object {
+              "env": Array [
+                Object {
+                  "name": "POSTGRES_PASSWORD",
+                  "value": "hunter2",
+                },
+              ],
+              "image": "postgres",
+              "imagePullPolicy": "IfNotPresent",
+              "name": "postgres",
+              "ports": Array [
+                Object {
+                  "containerPort": 5432,
+                },
+              ],
+              "volumeMounts": Array [],
+            },
+          ],
+          "volumes": Array [],
+        },
+      },
+    },
+  },
+  Object {
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": Object {
+      "name": "meetings",
+    },
+    "spec": Object {
+      "replicas": 1,
+      "selector": Object {
+        "matchLabels": Object {
+          "cdk8s.deployment": "test-chart-meetings.chart-meetings.deployment-c8a99f36",
+        },
+      },
+      "template": Object {
+        "metadata": Object {
+          "labels": Object {
+            "cdk8s.deployment": "test-chart-meetings.chart-meetings.deployment-c8a99f36",
+          },
+        },
+        "spec": Object {
+          "containers": Array [
+            Object {
+              "env": Array [
+                Object {
+                  "name": "DATABASE_URL",
+                  "value": "postgres://postgres:hunter2@meetings-db:5432",
+                },
+              ],
+              "image": "meetings",
+              "imagePullPolicy": "IfNotPresent",
+              "livenessProbe": Object {
+                "failureThreshold": 3,
+                "httpGet": Object {
+                  "path": "/",
+                  "port": 3000,
+                },
+              },
+              "name": "meetings",
+              "ports": Array [],
+              "volumeMounts": Array [],
+            },
+          ],
+          "initContainers": Array [
+            Object {
+              "command": Array [
+                "npx",
+                "prisma",
+                "migrate",
+                "dev",
+              ],
+              "env": Array [
+                Object {
+                  "name": "DATABASE_URL",
+                  "value": "postgres://postgres:hunter2@meetings-db:5432",
+                },
+              ],
+              "image": "meetings",
+              "imagePullPolicy": "IfNotPresent",
+              "name": "init-meetings-db",
+            },
+          ],
+          "volumes": Array [],
+        },
+      },
+    },
+  },
+  Object {
+    "apiVersion": "v1",
+    "kind": "Service",
+    "metadata": Object {
+      "name": "meetings",
+    },
+    "spec": Object {
+      "externalIPs": Array [],
+      "ports": Array [
+        Object {
+          "port": 80,
+          "targetPort": 3000,
+        },
+      ],
+      "selector": Object {
+        "cdk8s.deployment": "test-chart-meetings.chart-meetings.deployment-c8a99f36",
+      },
+      "type": "ClusterIP",
+    },
+  },
+  Object {
+    "apiVersion": "networking.k8s.io/v1beta1",
+    "kind": "Ingress",
+    "metadata": Object {
+      "name": "test-ch-meetings.chart-meetings.ingress.local-c812af18",
+    },
+    "spec": Object {
+      "rules": Array [
+        Object {
+          "host": "meetings.localhost",
+          "http": Object {
+            "paths": Array [
+              Object {
+                "backend": Object {
+                  "serviceName": "meetings",
+                  "servicePort": 80,
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+  },
+  Object {
+    "apiVersion": "batch/v1beta1",
+    "kind": "CronJob",
+    "metadata": Object {
+      "name": "meetings-daily-reminder",
+    },
+    "spec": Object {
+      "jobTemplate": Object {
+        "spec": Object {
+          "template": Object {
+            "spec": Object {
+              "containers": Array [
+                Object {
+                  "command": Array [
+                    "curl",
+                    "-XPOST",
+                    "meetings/sendDailyReminders",
+                  ],
+                  "image": "curlimages/curl",
+                  "imagePullPolicy": "IfNotPresent",
+                  "name": "daily-reminder",
+                },
+              ],
+              "restartPolicy": "Never",
+            },
+          },
+          "ttlSecondsAfterFinished": 60,
+        },
+      },
+      "schedule": "0 9 * * *",
+    },
+  },
+  Object {
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": Object {
+      "name": "minutes",
+    },
+    "spec": Object {
+      "replicas": 1,
+      "selector": Object {
+        "matchLabels": Object {
+          "cdk8s.deployment": "test-chart-minutes.chart-minutes.deployment-c89ff70d",
+        },
+      },
+      "template": Object {
+        "metadata": Object {
+          "labels": Object {
+            "cdk8s.deployment": "test-chart-minutes.chart-minutes.deployment-c89ff70d",
+          },
+        },
+        "spec": Object {
+          "containers": Array [
+            Object {
+              "env": Array [
+                Object {
+                  "name": "CONFLUENCE_EMAIL",
+                  "valueFrom": Object {
+                    "secretKeyRef": Object {
+                      "key": "CONFLUENCE_EMAIL",
+                      "name": "minutes-secret",
+                    },
+                  },
+                },
+                Object {
+                  "name": "CONFLUENCE_API_TOKEN",
+                  "valueFrom": Object {
+                    "secretKeyRef": Object {
+                      "key": "CONFLUENCE_API_TOKEN",
+                      "name": "minutes-secret",
+                    },
+                  },
+                },
+                Object {
+                  "name": "CONFLUENCE_DOMAIN",
+                  "valueFrom": Object {
+                    "secretKeyRef": Object {
+                      "key": "CONFLUENCE_DOMAIN",
+                      "name": "minutes-secret",
+                    },
+                  },
+                },
+              ],
+              "image": "minutes",
+              "imagePullPolicy": "IfNotPresent",
+              "name": "minutes",
+              "ports": Array [],
+              "volumeMounts": Array [],
+            },
+          ],
+          "volumes": Array [],
+        },
+      },
+    },
+  },
+  Object {
+    "apiVersion": "v1",
+    "kind": "Service",
+    "metadata": Object {
+      "name": "minutes",
+    },
+    "spec": Object {
+      "externalIPs": Array [],
+      "ports": Array [
+        Object {
+          "port": 80,
+          "targetPort": 3000,
+        },
+      ],
+      "selector": Object {
+        "cdk8s.deployment": "test-chart-minutes.chart-minutes.deployment-c89ff70d",
+      },
+      "type": "ClusterIP",
+    },
+  },
+  Object {
+    "apiVersion": "networking.k8s.io/v1beta1",
+    "kind": "Ingress",
+    "metadata": Object {
+      "name": "test-char-minutes.chart-minutes.ingress.local-c81b84b3",
+    },
+    "spec": Object {
+      "rules": Array [
+        Object {
+          "host": "minutes.localhost",
+          "http": Object {
+            "paths": Array [
+              Object {
+                "backend": Object {
+                  "serviceName": "minutes",
+                  "servicePort": 80,
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+  },
+  Object {
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": Object {
+      "name": "schedule",
+    },
+    "spec": Object {
+      "replicas": 1,
+      "selector": Object {
+        "matchLabels": Object {
+          "cdk8s.deployment": "test-chart-schedule.chart-schedule.deployment-c8c56cb1",
+        },
+      },
+      "template": Object {
+        "metadata": Object {
+          "labels": Object {
+            "cdk8s.deployment": "test-chart-schedule.chart-schedule.deployment-c8c56cb1",
+          },
+        },
+        "spec": Object {
+          "containers": Array [
+            Object {
+              "env": Array [
+                Object {
+                  "name": "GOOGLE_CLIENT_ID",
+                  "valueFrom": Object {
+                    "secretKeyRef": Object {
+                      "key": "GOOGLE_CLIENT_ID",
+                      "name": "schedule-secret",
+                    },
+                  },
+                },
+                Object {
+                  "name": "GOOGLE_CLIENT_SECRET",
+                  "valueFrom": Object {
+                    "secretKeyRef": Object {
+                      "key": "GOOGLE_CLIENT_SECRET",
+                      "name": "schedule-secret",
+                    },
+                  },
+                },
+                Object {
+                  "name": "GOOGLE_PERSONAL_REFRESH_TOKEN",
+                  "valueFrom": Object {
+                    "secretKeyRef": Object {
+                      "key": "GOOGLE_PERSONAL_REFRESH_TOKEN",
+                      "name": "schedule-secret",
+                    },
+                  },
+                },
+                Object {
+                  "name": "GOOGLE_CLIENT_REDIRECT_URI",
+                  "value": "http://localhost:3001/auth/google/callback",
+                },
+              ],
+              "image": "schedule",
+              "imagePullPolicy": "IfNotPresent",
+              "name": "schedule",
+              "ports": Array [],
+              "volumeMounts": Array [],
+            },
+          ],
+          "volumes": Array [],
+        },
+      },
+    },
+  },
+  Object {
+    "apiVersion": "v1",
+    "kind": "Service",
+    "metadata": Object {
+      "name": "schedule",
+    },
+    "spec": Object {
+      "externalIPs": Array [],
+      "ports": Array [
+        Object {
+          "port": 80,
+          "targetPort": 3000,
+        },
+      ],
+      "selector": Object {
+        "cdk8s.deployment": "test-chart-schedule.chart-schedule.deployment-c8c56cb1",
+      },
+      "type": "ClusterIP",
+    },
+  },
+  Object {
+    "apiVersion": "networking.k8s.io/v1beta1",
+    "kind": "Ingress",
+    "metadata": Object {
+      "name": "test-ch-schedule.chart-schedule.ingress.local-c8be5ad8",
+    },
+    "spec": Object {
+      "rules": Array [
+        Object {
+          "host": "schedule.localhost",
+          "http": Object {
+            "paths": Array [
+              Object {
+                "backend": Object {
+                  "serviceName": "schedule",
+                  "servicePort": 80,
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+  },
+  Object {
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": Object {
+      "name": "slack",
+    },
+    "spec": Object {
+      "replicas": 1,
+      "selector": Object {
+        "matchLabels": Object {
+          "cdk8s.deployment": "test-chart-slack.chart-slack.deployment-c880188c",
+        },
+      },
+      "template": Object {
+        "metadata": Object {
+          "labels": Object {
+            "cdk8s.deployment": "test-chart-slack.chart-slack.deployment-c880188c",
+          },
+        },
+        "spec": Object {
+          "containers": Array [
+            Object {
+              "env": Array [
+                Object {
+                  "name": "SLACK_SIGNING_SECRET",
+                  "valueFrom": Object {
+                    "secretKeyRef": Object {
+                      "key": "SLACK_SIGNING_SECRET",
+                      "name": "slack-secret",
+                    },
+                  },
+                },
+                Object {
+                  "name": "SLACK_BOT_USER_TOKEN",
+                  "valueFrom": Object {
+                    "secretKeyRef": Object {
+                      "key": "SLACK_BOT_USER_TOKEN",
+                      "name": "slack-secret",
+                    },
+                  },
+                },
+              ],
+              "image": "slack",
+              "imagePullPolicy": "IfNotPresent",
+              "name": "slack",
+              "ports": Array [],
+              "volumeMounts": Array [],
+            },
+          ],
+          "volumes": Array [],
+        },
+      },
+    },
+  },
+]
+`;
