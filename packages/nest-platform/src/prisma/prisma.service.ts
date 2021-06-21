@@ -11,6 +11,7 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
   async onModuleInit() {
     this.logger.debug('prisma client configuring')
 
+    // In prod-like environments, this could e.g. report a histogram of query times
     this.client.$on('query', event => {
       this.logger.debug({ event: 'query', body: event })
     })

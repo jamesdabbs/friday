@@ -1,4 +1,5 @@
 registry=https://registry.npmjs.org/
 
+# $GITHUB_TOKEN should be replaced with a Github user token with package management rights
 @jamesdabbs:registry=https://npm.pkg.github.com/
 //npm.pkg.github.com/:_authToken=$GITHUB_TOKEN

@@ -20,7 +20,13 @@ export function localIngress(construct: Construct, service: Service) {
     throw Error(`Cannot define local ingress without a service name`)
   }
 
-  const ingress = new IngressV1Beta1(construct, `${name}.ingress.local`)
+  const fqn = `${name}.ingress.local`;
+
+  const ingress = new IngressV1Beta1(construct, fqn, {
+    metadata: {
+      name: fqn
+    }
+  })
 
   ingress.addHostDefaultBackend(
     `${name}.localhost`,

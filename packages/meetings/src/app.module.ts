@@ -3,13 +3,16 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MeetingsService } from './meetings/meetings.service';
-import { PlatformModule } from '@jamesdabbs/nest-platform'
+import { HealthController, PlatformModule } from '@jamesdabbs/nest-platform'
 import { PrismaClient } from '@prisma/client'
 
 @Module({
   imports: [
     PlatformModule.forRoot({
-      prisma: PrismaClient
+      prisma: PrismaClient,
+      health: {
+        path: '/health'
+      }
     }),
     ClientsModule.register([
       {

@@ -1,6 +1,6 @@
 {
   "name": "@jamesdabbs/nest-platform",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "UNLICENSED",
   "main": "dist/index.js",
   "bin": {
@@ -32,6 +32,7 @@
     "@nestjs/core": "^7.6.18",
     "@nestjs/platform-express": "^7.6.18",
     "@prisma/client": "^2.25.0",
+    "nest-router": "^1.0.9",
     "run-script-webpack-plugin": "^0.0.11",
     "webpack-node-externals": "^3.0.0"
   }

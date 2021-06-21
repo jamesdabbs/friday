@@ -100,32 +100,13 @@ Array [
               "livenessProbe": Object {
                 "failureThreshold": 3,
                 "httpGet": Object {
-                  "path": "/",
+                  "path": "/health",
                   "port": 3000,
                 },
               },
               "name": "meetings",
               "ports": Array [],
               "volumeMounts": Array [],
-            },
-          ],
-          "initContainers": Array [
-            Object {
-              "command": Array [
-                "npx",
-                "prisma",
-                "migrate",
-                "dev",
-              ],
-              "env": Array [
-                Object {
-                  "name": "DATABASE_URL",
-                  "value": "postgres://postgres:hunter2@meetings-db:5432",
-                },
-              ],
-              "image": "meetings",
-              "imagePullPolicy": "IfNotPresent",
-              "name": "init-meetings-db",
             },
           ],
           "volumes": Array [],
@@ -157,7 +138,7 @@ Array [
     "apiVersion": "networking.k8s.io/v1beta1",
     "kind": "Ingress",
     "metadata": Object {
-      "name": "construct-meetings.ingress.local-c886705d",
+      "name": "meetings.ingress.local",
     },
     "spec": Object {
       "rules": Array [

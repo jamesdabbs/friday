@@ -1,10 +1,12 @@
 {
   "name": "infra",
   "version": "1.0.0",
+  "description": "",
+  "author": "James Dabbs <james.dabbs@gmail.com>",
+  "private": true,
+  "license": "UNLICENSED",
   "main": "main.js",
   "types": "main.ts",
-  "license": "Apache-2.0",
-  "private": true,
   "scripts": {
     "import": "cdk8s import",
     "synth": "cdk8s synth",

@@ -89,7 +89,7 @@ Array [
     "apiVersion": "networking.k8s.io/v1beta1",
     "kind": "Ingress",
     "metadata": Object {
-      "name": "construct-minutes.ingress.local-c8aad572",
+      "name": "minutes.ingress.local",
     },
     "spec": Object {
       "rules": Array [
