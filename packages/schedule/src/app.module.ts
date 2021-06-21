@@ -3,10 +3,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { google } from 'googleapis';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { fetchEnv } from '@jamesdabbs-/nest-platform'
+import { PlatformModule, fetchEnv } from '@jamesdabbs/nest-platform'
 
 @Module({
-  imports: [ConfigModule.forRoot()],
+  imports: [
+    ConfigModule.forRoot(),
+    PlatformModule.forRoot()
+  ],
   controllers: [AppController],
   providers: [
     AppService,

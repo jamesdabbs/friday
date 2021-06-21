@@ -1,11 +1,10 @@
-import { DynamicModule, INestApplication, Module, Provider } from "@nestjs/common";
+import { DynamicModule, Module, Provider } from "@nestjs/common";
 import { PRISMA_CLIENT } from "src/constants";
-import { LoggingInterceptor } from "src/logging/logger.interceptor";
 import { Logger } from "src/logging/logger.service"
 import { PrismaService } from "src/prisma/prisma.service";
 
 export interface Options {
-  prisma: any // FIXME
+  prisma?: any // FIXME
 }
 
 const logSettings = [
@@ -31,31 +30,33 @@ const logSettings = [
 export class PlatformModule {
   static forRoot({
     prisma
-  }: Options): DynamicModule {
-    const providers: Provider<any>[] = [
-      Logger,
-      PrismaService
+  }: Options = {}): DynamicModule {
+    let providers: Provider<any>[] = [
+      Logger
     ]
 
+    const exports = []
+
     if (prisma) {
-      providers.push({
-        provide: PRISMA_CLIENT,
-        useFactory: () => {
-          return new prisma({
-            log: logSettings
-          })
-        }
-      })
+      providers = providers.concat(
+        {
+          provide: PRISMA_CLIENT,
+          useFactory: () => {
+            return new prisma({
+              log: logSettings
+            })
+          }
+        },
+        PrismaService
+      )
+
+      exports.push(PRISMA_CLIENT)
     }
 
     return {
       module: PlatformModule,
       providers,
-      exports: [PRISMA_CLIENT]
+      exports
     }
-  }
-
-  static configure(app: INestApplication) {
-    app.useGlobalInterceptors(new LoggingInterceptor())
   }
 }

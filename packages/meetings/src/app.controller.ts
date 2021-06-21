@@ -1,6 +1,6 @@
 import { Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
-import { MeetingsService } from 'src/meetings/meetings.service';
+import { MeetingsService } from './meetings/meetings.service';
 
 @Controller()
 export class AppController {
@@ -18,7 +18,6 @@ export class AppController {
   meetingsToday() {
     return this.meetings.today()
   }
-
 
   @Post('sendDailyReminders')
   async sendDailyReminders(): Promise<void> {

@@ -18,9 +18,9 @@ export class MyChart extends Chart {
     new MeetingsChart(this, "meetings.chart", {
       // schedule: "*/1 * * * *"
     });
-    // new MinutesChart(this, "minutes.chart");
-    // new ScheduleChart(this, "schedule.chart");
-    // new SlackChart(this, "slack.chart");
+    new MinutesChart(this, "minutes.chart");
+    new ScheduleChart(this, "schedule.chart");
+    new SlackChart(this, "slack.chart");
   }
 }
 

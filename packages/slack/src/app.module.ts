@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { App } from '@slack/bolt'
-import { fetchEnv } from '@jamesdabbs-/nest-platform'
+import { PlatformModule, fetchEnv } from '@jamesdabbs/nest-platform'
 
 function slackFactory(
   config: ConfigService
@@ -18,7 +18,10 @@ function slackFactory(
 }
 
 @Module({
-  imports: [ConfigModule.forRoot()],
+  imports: [
+    ConfigModule.forRoot(),
+    PlatformModule.forRoot()
+  ],
   controllers: [AppController],
   providers: [
     {

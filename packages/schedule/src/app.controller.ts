@@ -3,7 +3,7 @@ import { AppService } from './app.service';
 import { OAuth2Client } from 'google-auth-library'
 import { calendar_v3, google } from 'googleapis';
 import { ConfigService } from '@nestjs/config';
-import { pick } from '@jamesdabbs-/nest-platform';
+import { pick } from '@jamesdabbs/nest-platform';
 
 @Controller()
 export class AppController {

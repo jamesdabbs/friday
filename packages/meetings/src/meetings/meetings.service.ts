@@ -42,6 +42,6 @@ export class MeetingsService {
 
     console.log({ meetings })
 
-    return meetings
+    return instances
   }
 }

@@ -1,5 +1,7 @@
 export { fetchEnv, pick } from './util'
 export { PrismaService } from './prisma/prisma.service'
+export { LoggingInterceptor } from './logging/logger.interceptor'
 export { Logger } from './logging/logger.service'
 export { PlatformModule } from './platform.module'
 export { PRISMA_CLIENT } from './constants'
+export { bootstrap } from './bootstrap'

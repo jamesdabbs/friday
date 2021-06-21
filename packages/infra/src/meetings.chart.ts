@@ -60,7 +60,7 @@ export class MeetingsChart extends Chart {
       env: {
         DATABASE_URL: EnvValue.fromValue(`postgres://postgres:hunter2@meetings-db:${dbPort}`)
       },
-      liveness: Probe.fromHttpGet('/')
+      liveness: Probe.fromHttpGet('/', { port: 3000 })
     });
 
     const meetingsServiceName = "meetings";

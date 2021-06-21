@@ -1,3 +1,3 @@
-#!/bin/bash
+#!/bin/sh
 
-nest build --webpack --webpackPath node_modules/@jamesdabbs/nest-platform/src/hmr.config.js --watch
+nest build --webpack --webpackPath ./node_modules/@jamesdabbs/nest-platform/hmr.config.js --watch

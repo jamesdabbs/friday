@@ -5,19 +5,12 @@ build:
   local:
     push: false
     useBuildkit: true
+
   artifacts:
-
-  - image: nest-platform
-    context: packages/nest-platform
-    docker:
-      dockerfile: build/Dockerfile.npm-package
-
   - image: meetings
     context: packages/meetings
-    requires:
-      - image: nest-platform
-        alias: NEST_PLATFORM
     docker: &docker
+      dockerfile: build/nest-prisma.dockerfile
       secret:
         id: npmrc
         src: .npmrc
@@ -25,20 +18,32 @@ build:
       manual:
         - src: src/**/*.ts
           dest: .
-        - src: '../shared/dist/*'
-          dest: node_modules/@jamesdabbs/nest-platform/dist
+
+        # TODO: could consider a tigher dev loop on library work with something like
+        # - src: '../shared/dist/*'
+        #   dest: node_modules/@jamesdabbs/nest-platform/dist
+        # - src: tmp/restart.txt
+        #   dest: tmp/restart.txt
 
   - image: minutes
     context: packages/minutes
-    docker: *docker
+    docker:
+      <<: *docker
+      dockerfile: build/nest.dockerfile
     sync: *sync
+
   - image: schedule
     context: packages/schedule
-    docker: *docker
+    docker:
+      <<: *docker
+      dockerfile: build/nest.dockerfile
     sync: *sync
+
   - image: slack
     context: packages/slack
-    docker: *docker
+    docker:
+      <<: *docker
+      dockerfile: build/nest.dockerfile
     sync: *sync
 
 deploy:
