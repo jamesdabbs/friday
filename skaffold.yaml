@@ -48,6 +48,7 @@ build:
 
 deploy:
   kubectl:
+    # kubectl apply --namespace=... -f packages/infra/dist/infra.k8s.yaml
     flags:
       global:
         - --namespace=friday

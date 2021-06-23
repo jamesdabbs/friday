@@ -2,15 +2,13 @@ import { Construct } from "constructs";
 import { Chart, ChartProps } from "cdk8s";
 import { KubeCronJobV1Beta1 } from "../imports/k8s";
 import {
-  Deployment,
   EnvValue,
   ImagePullPolicy,
-  Probe,
   RestartPolicy,
   Service,
   StatefulSet
 } from "cdk8s-plus-17";
-import { localIngress } from "./util";
+import { NestService } from "./NestService";
 
 export type Props = ChartProps & Partial<{
   schedule: string
@@ -47,21 +45,12 @@ export class MeetingsChart extends Chart {
       }
     })
 
-    const meetingsDeployment = new Deployment(this, "meetings.deployment", {
-      metadata: {
-        name: "meetings",
-      },
-    });
-
-    meetingsDeployment.addContainer({
+    new NestService(this, id, {
       name: "meetings",
-      image: "meetings",
-      imagePullPolicy: ImagePullPolicy.IF_NOT_PRESENT,
       env: {
         DATABASE_URL: EnvValue.fromValue(`postgres://postgres:hunter2@meetings-db:${dbPort}`)
       },
-      liveness: Probe.fromHttpGet('/health', { port: 3000 })
-    });
+    })
 
     // // cdk8s-plus-17 does not currently support initContainers but
     // // we can manually patch it up. See
@@ -89,21 +78,6 @@ export class MeetingsChart extends Chart {
     //     }
     //   ])
     // )
-
-    const meetingsServiceName = "meetings";
-    const meetingsPort = 3000;
-
-    const meetings = new Service(this, "meetings.service", {
-      metadata: {
-        name: meetingsServiceName,
-      },
-    });
-
-    meetings.addDeployment(meetingsDeployment, 80, {
-      targetPort: meetingsPort
-    });
-
-    localIngress(this, meetings)
 
     new KubeCronJobV1Beta1(this, "meetings.daily", {
       metadata: {

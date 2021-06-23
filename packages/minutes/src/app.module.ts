@@ -7,7 +7,11 @@ import { PlatformModule } from '@jamesdabbs/nest-platform'
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    PlatformModule.forRoot()
+    PlatformModule.forRoot({
+      health: {
+        path: '/health'
+      }
+    })
   ],
   controllers: [AppController],
   providers: [AppService],
